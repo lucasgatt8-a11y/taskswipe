@@ -1,133 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TaskSwipe Prototype</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1677ff">
+<title>TaskSwipe — Local jobs. Real people.</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#eef2f7;color:#101828}
-.app{max-width:430px;margin:0 auto;min-height:100vh;background:#fff}
-header{padding:22px 20px 10px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:24px;font-weight:800}.logo span{color:#2563eb}
-.screen{padding:12px 20px 90px}.hidden{display:none}
-h1{font-size:30px;margin:12px 0 8px}h2{margin:8px 0}.muted{color:#667085}
-button{border:0;border-radius:14px;padding:14px 18px;font-weight:700;font-size:15px;cursor:pointer}
-.primary{background:#2563eb;color:white;width:100%}.secondary{background:#eef2ff;color:#1d4ed8;width:100%}
-.choice{padding:22px;margin:14px 0;border:1px solid #e4e7ec;border-radius:18px;background:#fff;text-align:left}
-.card{border:1px solid #e4e7ec;border-radius:22px;padding:20px;margin:18px 0;box-shadow:0 8px 24px #10182812}
-.price{font-size:27px;font-weight:800}.tag{display:inline-block;background:#eef2ff;color:#344054;padding:7px 10px;border-radius:20px;margin:4px;font-size:13px}
-.actions{display:flex;gap:12px;margin-top:16px}.actions button{flex:1}
-textarea,input{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:12px;margin:7px 0 14px;font:inherit}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:430px;width:100%;background:white;border-top:1px solid #e4e7ec;display:flex;justify-content:space-around;padding:10px}
-nav button{background:none;padding:8px;font-size:12px;color:#475467}
-.match{text-align:center;padding:45px 15px}.heart{font-size:70px}
-.small{font-size:13px}.job{cursor:pointer}
+:root{--b:#1677ff;--ink:#142033;--muted:#708096;--bg:#f4f7fb;--line:#e5ebf3;--green:#20c997;--red:#ff5c6c}
+*{box-sizing:border-box}body{margin:0;background:#dfe7f2;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+.app{max-width:460px;min-height:100vh;margin:auto;background:var(--bg);position:relative;overflow:hidden}.top{height:70px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:9px;font-size:21px;font-weight:900}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(145deg,#1677ff,#55b8ff);display:grid;place-items:center;color:white;box-shadow:0 7px 18px #1677ff44}.logo:after{content:"➜";transform:rotate(-25deg);font-weight:900}
+.icon{width:40px;height:40px;border:0;border-radius:13px;background:#f1f5fa}
+main{padding:18px 18px 94px}.screen{display:none}.screen.active{display:block}h1{font-size:29px;line-height:1.05;margin:8px 0}.sub{color:var(--muted);margin:0 0 20px}
+.hero{background:linear-gradient(145deg,#0e6cf0,#56b8ff);color:white;border-radius:25px;padding:23px;box-shadow:0 15px 35px #1677ff35;margin-bottom:18px}.hero h1{font-size:31px}.hero p{opacity:.92}.btn{width:100%;padding:15px 18px;border:0;border-radius:15px;font-weight:800}.primary{background:var(--b);color:white}.secondary{background:#eaf2ff;color:#1264d6}
+.rolegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.role{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;text-align:left}.role b{display:block;margin:9px 0 4px}.role span{font-size:13px;color:var(--muted)}
+.stack{height:470px;position:relative;margin:8px 0 14px}.card{position:absolute;inset:0;background:white;border-radius:25px;overflow:hidden;box-shadow:0 14px 35px #1c355515;border:1px solid var(--line);touch-action:none;user-select:none}.pic{height:220px;background:linear-gradient(135deg,#b7e0ff,#eef7ff);display:grid;place-items:center;font-size:76px}.body{padding:20px}.pill{display:inline-block;background:#eaf2ff;color:#1167d9;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800}.body h2{margin:11px 0 5px;font-size:24px}.price{font-size:20px;font-weight:900;color:#0e69dc}.meta,.small{color:var(--muted);font-size:13px}.swipes{display:flex;justify-content:center;gap:18px}.swipe{width:58px;height:58px;border:0;border-radius:50%;background:white;box-shadow:0 7px 20px #1c355518;font-size:23px}.no{color:var(--red)}.yes{color:var(--green)}
+.section{background:white;border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.avatar{width:48px;height:48px;border-radius:16px;background:#dcecff;display:grid;place-items:center;font-weight:900;color:#1267d8}.jobrow{padding:13px 0;border-bottom:1px solid var(--line)}.jobrow:last-child{border:0}
+.form{display:grid;gap:12px}.input,.textarea{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;background:white;outline:none}.textarea{min-height:110px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;height:70px;background:white;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:10}.nav{background:none;color:#8390a3;font-size:11px;font-weight:700;display:grid;gap:4px;place-items:center}.nav.active{color:var(--b)}.nav i{font-size:21px;font-style:normal}
+.toast{position:fixed;left:50%;bottom:86px;transform:translate(-50%,20px);background:#142033;color:white;padding:12px 16px;border-radius:13px;opacity:0;transition:.25s;z-index:30;font-size:13px}.toast.show{opacity:1;transform:translate(-50%,0)}
+.match{position:fixed;inset:0;background:#0c1830ee;z-index:40;display:none;align-items:center;justify-content:center;padding:25px}.match.show{display:flex}.matchbox{background:white;border-radius:28px;padding:28px;text-align:center;width:100%;max-width:370px}.matchfaces{display:flex;justify-content:center;gap:15px;align-items:center;font-size:28px;margin:15px}
+@media(min-width:700px){.app{min-height:760px;margin:25px auto;border-radius:30px}.bottom{bottom:25px;border-radius:0 0 30px 30px}}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="logo">Task<span>Swipe</span></div><div id="userLabel" class="small muted"></div></header>
-
-<section id="welcome" class="screen">
-<h1>Local jobs.<br>Local people.</h1>
-<p class="muted">Post a job, find local work, swipe to connect, and get it done.</p>
-<div class="card">
-<h2>How it works</h2><p>1. Post or browse a job<br>2. Swipe right if interested<br>3. Match and message<br>4. Complete the job</p>
+<header class="top"><div class="brand"><div class="logo"></div>TaskSwipe</div><button class="icon" onclick="toast('Notifications coming soon!')">🔔</button></header>
+<main>
+<section id="welcome" class="screen active"><div class="hero"><span class="pill" style="background:#ffffff2b;color:white">TASKSWIPE</span><h1>Local jobs.<br>Real people.</h1><p>Find someone nearby to get the job done — or find your next job in a swipe.</p><button class="btn" style="background:white;color:#1267d8" onclick="show('roles')">Get started →</button></div><div class="section"><b>How it works</b><p class="small">Post or discover a job → swipe → match → chat → get it done.</p></div></section>
+<section id="roles" class="screen"><h1>What brings you here?</h1><p class="sub">Choose your side. You can switch later.</p><div class="rolegrid"><button class="role" onclick="choose('customer')"><div style="font-size:34px">🏠</div><b>I need a job done</b><span>Post a task and find nearby help.</span></button><button class="role" onclick="choose('worker')"><div style="font-size:34px">🛠️</div><b>I'm looking for jobs</b><span>Swipe through jobs and get matched.</span></button></div></section>
+<section id="home" class="screen"><h1 id="greet">Hey there 👋</h1><p class="sub">Ready to make something happen?</p><div class="hero"><h1 style="font-size:25px">Your next opportunity is one swipe away.</h1><button class="btn" style="background:white;color:#1267d8" onclick="show('swipe')">Start swiping →</button></div><div class="section"><div class="row"><b>Nearby jobs</b><span class="small">2.5 mi</span></div><div class="jobrow"><b>Pressure Wash Driveway</b><div class="small">$125 · Saturday · 2.4 mi</div></div><div class="jobrow"><b>Yard Cleanup</b><div class="small">$90 · Sunday · 3.1 mi</div></div></div></section>
+<section id="swipe" class="screen"><div class="row"><div><h1>Discover</h1><p class="sub">Swipe right to match.</p></div><span class="pill">JOBS</span></div><div id="stack" class="stack"></div><div class="swipes"><button class="swipe no" onclick="swipe(false)">✕</button><button class="swipe" onclick="toast('Saved')">★</button><button class="swipe yes" onclick="swipe(true)">♥</button></div></section>
+<section id="post" class="screen"><h1>Post a job</h1><p class="sub">Tell local workers what you need.</p><div class="form"><input id="title" class="input" placeholder="Job title"><input id="budget" class="input" placeholder="Budget (e.g. $125)"><input id="when" class="input" placeholder="When do you need it?"><textarea id="desc" class="textarea" placeholder="Describe the job..."></textarea><button class="btn primary" onclick="postJob()">Post job</button></div></section>
+<section id="jobs" class="screen"><h1>My jobs</h1><p class="sub">Keep track of your work.</p><div class="section"><div class="row"><div><b>Pressure Wash Driveway</b><div class="small">Matched · Saturday</div></div><span class="pill">$125</span></div></div><div class="section"><div class="row"><div><b>Yard Cleanup</b><div class="small">Waiting for matches</div></div><span class="pill">Posted</span></div></div></section>
+<section id="messages" class="screen"><h1>Messages</h1><p class="sub">Your matches in one place.</p><div class="section"><div class="row"><div class="row"><div class="avatar">JD</div><div><b>Jordan D.</b><div class="small">Hey! What time works for you?</div></div></div><span>›</span></div></div><div class="section"><div class="row"><div class="row"><div class="avatar">MR</div><div><b>Maria R.</b><div class="small">Thanks for matching!</div></div></div><span>›</span></div></div></section>
+<section id="profile" class="screen"><h1>Your profile</h1><p class="sub">Build trust with the community.</p><div class="section"><div class="row"><div class="row"><div class="avatar" style="width:64px;height:64px">LG</div><div><b style="font-size:19px">Your Name</b><div class="small">⭐ New member</div></div></div><button class="icon">✎</button></div></div><div class="section"><b>About you</b><p class="small">Add your skills, experience, service area, and a short bio.</p></div></section>
+</main>
+<nav id="nav" class="bottom" style="display:none"><button class="nav active" onclick="go('home',this)"><i>⌂</i>Home</button><button class="nav" onclick="go('swipe',this)"><i>♥</i>Discover</button><button class="nav" onclick="go('post',this)"><i>＋</i>Post</button><button class="nav" onclick="go('messages',this)"><i>▢</i>Messages</button><button class="nav" onclick="go('profile',this)"><i>●</i>Profile</button></nav>
 </div>
-<button class="primary" onclick="show('role')">Get Started</button>
-</section>
-
-<section id="role" class="screen hidden">
-<h1>What are you here for?</h1>
-<button class="choice" onclick="setRole('worker')">🧑‍🔧 <b>I'm looking for work</b><br><span class="muted">Find nearby jobs.</span></button>
-<button class="choice" onclick="setRole('customer')">🏠 <b>I need someone to do a job</b><br><span class="muted">Find someone nearby.</span></button>
-</section>
-
-<section id="profile" class="screen hidden">
-<h1>Create your profile</h1>
-<label>Name</label><input id="name" placeholder="Your name">
-<label>City</label><input id="city" placeholder="Your city">
-<label>What do you do?</label><input id="service" placeholder="e.g. Pressure washing">
-<label>About you</label><textarea id="bio" rows="4" placeholder="Tell people what you can do..."></textarea>
-<button class="primary" onclick="saveProfile()">Continue</button>
-</section>
-
-<section id="home" class="screen hidden">
-<h1 id="homeTitle">Welcome</h1>
-<p class="muted" id="homeSub"></p>
-<div class="card job" onclick="goSwipe()"><h2>🔄 Start Swiping</h2><p class="muted">Find jobs or people near you.</p></div>
-<div class="card" onclick="show('post')"><h2>➕ Post a Job</h2><p class="muted">Describe what you need and set your budget.</p></div>
-<div class="card" onclick="show('messages')"><h2>💬 Messages</h2><p class="muted">Your matches and conversations.</p></div>
-</section>
-
-<section id="swipe" class="screen hidden">
-<h1 id="swipeTitle">Nearby</h1>
-<div id="swipeCard"></div>
-<div class="actions"><button class="secondary" onclick="swipe(false)">← Pass</button><button class="primary" onclick="swipe(true)">❤️ Interested</button></div>
-</section>
-
-<section id="post" class="screen hidden">
-<h1>Post a job</h1>
-<label>What do you need?</label><input id="jobTitle" placeholder="e.g. Pressure wash my driveway">
-<label>Budget</label><input id="budget" type="number" placeholder="100">
-<label>When?</label><input id="date" type="date">
-<label>Description</label><textarea id="desc" rows="5" placeholder="Tell workers what you need..."></textarea>
-<button class="primary" onclick="postJob()">Post Job</button>
-</section>
-
-<section id="match" class="screen hidden">
-<div class="match"><div class="heart">❤️</div><h1>It's a Match!</h1><p class="muted">You both want to work together.</p><button class="primary" onclick="show('messages')">Message</button></div>
-</section>
-
-<section id="messages" class="screen hidden">
-<h1>Messages</h1>
-<div class="card"><h3>Sarah — Pressure Washing</h3><p class="muted">Hey! Are you available Saturday?</p><button class="secondary" onclick="alert('Demo chat: You can add a real-time chat backend later.')">Open Chat</button></div>
-</section>
-
-<section id="jobs" class="screen hidden">
-<h1>My Jobs</h1>
-<div class="card"><h3>🟢 Pressure Washing</h3><p class="muted">Saturday · $125</p><button class="secondary">View Job</button></div>
-</section>
-
-<nav id="nav" class="hidden">
-<button onclick="show('home')">🏠<br>Home</button>
-<button onclick="goSwipe()">🔄<br>Swipe</button>
-<button onclick="show('messages')">💬<br>Messages</button>
-<button onclick="show('jobs')">📋<br>Jobs</button>
-</nav>
-</div>
-
+<div id="toast" class="toast"></div>
+<div id="match" class="match"><div class="matchbox"><span class="pill">IT'S A MATCH</span><h1>Nice! 🎉</h1><p class="sub">You matched with someone who can help get the job done.</p><div class="matchfaces"><div class="avatar">JD</div><b>♥</b><div class="avatar">LG</div></div><button class="btn primary" onclick="closeMatch();go('messages',document.querySelectorAll('.nav')[3])">Start chatting</button><br><br><button class="btn secondary" onclick="closeMatch()">Keep swiping</button></div></div>
 <script>
-let role='', name='';
-const jobs=[
-{title:'Pressure Wash Driveway',price:'$125',distance:'2.4 miles',date:'Saturday',desc:'Looking for someone to pressure wash my driveway and sidewalk.'},
-{title:'Yard Cleanup',price:'$90',distance:'3.1 miles',date:'Sunday',desc:'Need leaves and branches cleaned up and hauled away.'},
-{title:'Car Wash',price:'$60',distance:'1.8 miles',date:'Tomorrow',desc:'Full exterior car wash at my home.'}
-];
-let i=0;
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
-function setRole(r){role=r;show('profile')}
-function saveProfile(){
- name=document.getElementById('name').value||'User';
- document.getElementById('userLabel').textContent=name;
- document.getElementById('homeTitle').textContent='Hey, '+name+' 👋';
- document.getElementById('homeSub').textContent=role==='worker'?'Find local jobs that fit you.':'Find local people who can help.';
- document.getElementById('nav').classList.remove('hidden'); show('home');
-}
-function goSwipe(){renderSwipe();show('swipe')}
-function renderSwipe(){
- const c=jobs[i%jobs.length];
- document.getElementById('swipeTitle').textContent=role==='worker'?'Jobs near you':'Workers near you';
- document.getElementById('swipeCard').innerHTML=role==='worker'
- ? `<div class="card"><div class="price">${c.price}</div><h2>${c.title}</h2><p>📍 ${c.distance} · 📅 ${c.date}</p><p>${c.desc}</p><span class="tag">Local</span><span class="tag">Flexible</span></div>`
- : `<div class="card"><div class="price">⭐ 4.9</div><h2>Alex — ${document.getElementById('service').value||'Local Helper'}</h2><p>📍 ${c.distance} away · 25 jobs completed</p><p>Reliable local worker available for ${c.title.toLowerCase()}.</p><span class="tag">Verified profile</span><span class="tag">Local</span></div>`;
-}
-function swipe(like){if(like){show('match')}else{i++;renderSwipe()}}
-function postJob(){
- alert('Demo: Your job was posted. In a full app, nearby workers would now see it.');
- show('home');
-}
-show('welcome');
+const jobs=[['Pressure Wash Driveway','$125','2.4 mi · Saturday','🏠'],['Yard Cleanup','$90','3.1 mi · Sunday','🌿'],['Car Wash','$60','1.8 mi · Tomorrow','🚗'],['Furniture Assembly','$80','2.9 mi · Friday','🪑']];
+let idx=0,start=0,drag=false;
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('nav').style.display=(id==='welcome'||id==='roles')?'none':'flex';if(id==='swipe')render()}
+function choose(r){document.getElementById('greet').textContent=r==='worker'?'Find your next job 👋':'Let’s get that job done 👋';show('home')}
+function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));el.classList.add('active');show(id)}
+function render(){let s=document.getElementById('stack');s.innerHTML='';for(let i=Math.min(idx+2,jobs.length-1);i>=idx;i--){let j=jobs[i],c=document.createElement('div');c.className='card';c.style.transform='scale('+(1-(i-idx)*.035)+') translateY('+(i-idx)*10+'px)';c.innerHTML='<div class="pic">'+j[3]+'</div><div class="body"><span class="pill">NEARBY JOB</span><h2>'+j[0]+'</h2><div class="price">'+j[1]+'</div><div class="meta">'+j[2]+'</div><p class="small">Local customer looking for reliable help. Chat after you match to discuss details.</p></div>';if(i===idx){c.onpointerdown=e=>{drag=true;start=e.clientX;c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(drag){let x=e.clientX-start;c.style.transform='translateX('+x+'px) rotate('+(x/14)+'deg)';c.style.opacity=Math.max(.55,1-Math.abs(x)/500)}};c.onpointerup=e=>{if(!drag)return;drag=false;let x=e.clientX-start;if(Math.abs(x)>90)swipe(x>0);else render()}}s.appendChild(c)}if(idx>=jobs.length)s.innerHTML='<div class="section" style="margin-top:120px;text-align:center"><div style="font-size:50px">🎉</div><h2>You’re all caught up!</h2><p class="small">Check back later for new jobs.</p><button class="btn primary" onclick="idx=0;render()">Start over</button></div>'}
+function swipe(like){let c=document.querySelector('.card');if(!c)return;c.style.transition='.35s';c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';c.style.opacity=0;setTimeout(()=>{idx++;render();if(like)document.getElementById('match').classList.add('show')},250)}
+function closeMatch(){document.getElementById('match').classList.remove('show')}
+function postJob(){toast((document.getElementById('title').value||'New job')+' posted!');go('jobs',document.querySelector('.nav'))}
+function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+render();
 </script>
-</body>
-</html>
+</body></html>
