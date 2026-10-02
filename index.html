@@ -45,7 +45,7 @@ main{padding:18px 18px 94px}.screen{display:none}.screen.active{display:block}h1
 const SUPABASE_URL='https://bytfyysuaovfwcsvmvvo.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_BGVDj3nEBBGH7sKLRLwRGw_peil5Gjb';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const jobs=[['Pressure Wash Driveway','$125','2.4 mi · Saturday','🏠'],['Yard Cleanup','$90','3.1 mi · Sunday','🌿'],['Car Wash','$60','1.8 mi · Tomorrow','🚗'],['Furniture Assembly','$80','2.9 mi · Friday','🪑']];
+let jobs=[];
 let idx=0,start=0,drag=false,currentUser=null,authMode='signup';
 function setNotice(m,good=false){const n=document.getElementById('authNotice');n.textContent=m;n.style.background=good?'#e9f9f2':'#fff3cd';n.style.color=good?'#146c43':'#705400';n.classList.add('show')}
 function toggleAuthMode(){authMode=authMode==='signup'?'login':'signup';document.getElementById('authTitle').textContent=authMode==='signup'?'Create your account':'Welcome back';document.getElementById('authSub').textContent=authMode==='signup'?'Find local work or local help.':'Log in to continue to LocalLeads.';document.getElementById('authName').style.display=authMode==='signup'?'block':'none';document.getElementById('authSubmit').textContent=authMode==='signup'?'Create account':'Log in';document.getElementById('authSwitch').textContent=authMode==='signup'?'Already have an account? Log in':'Need an account? Sign up'}
@@ -57,9 +57,19 @@ async function logout(){if(currentUser){await sb.auth.signOut();currentUser=null
 async function initAuth(){if(SUPABASE_PUBLISHABLE_KEY==='PASTE_YOUR_PUBLISHABLE_KEY_HERE')return;const {data:{session}}=await sb.auth.getSession();if(session){currentUser=session.user;await loadProfile()}}
 sb.auth.onAuthStateChange((_e,s)=>{currentUser=s?.user||null});
 
-function show(id){if(!currentUser&&!['welcome','auth'].includes(id))id='auth';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('nav').style.display=(id==='welcome'||id==='auth'||id==='roles')?'none':'flex';if(id==='swipe')render()}
+function show(id){if(!currentUser&&!['welcome','auth'].includes(id))id='auth';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('nav').style.display=(id==='welcome'||id==='auth'||id==='roles')?'none':'flex';if(id==='swipe')loadJobs()}
 function choose(r){document.getElementById('greet').textContent=r==='worker'?'Find your next job 👋':'Let’s get that job done 👋';show('home')}
 function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));el.classList.add('active');show(id)}
+  async function loadJobs(){
+  const {data,error}=await sb.from('jobs').select('*').order('created_at',{ascending:false});
+  if(error){
+    toast(error.message);
+    return;
+  }
+  jobs=data||[];
+  idx=0;
+  render();
+}
 function render(){let s=document.getElementById('stack');s.innerHTML='';for(let i=Math.min(idx+2,jobs.length-1);i>=idx;i--){let j=jobs[i],c=document.createElement('div');c.className='card';c.style.transform='scale('+(1-(i-idx)*.035)+') translateY('+(i-idx)*10+'px)';c.innerHTML='<div class="pic">'+j[3]+'</div><div class="body"><span class="pill">NEARBY JOB</span><h2>'+j[0]+'</h2><div class="price">'+j[1]+'</div><div class="meta">'+j[2]+'</div><p class="small">Local customer looking for reliable help. Chat after you match to discuss details.</p></div>';if(i===idx){c.onpointerdown=e=>{drag=true;start=e.clientX;c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(drag){let x=e.clientX-start;c.style.transform='translateX('+x+'px) rotate('+(x/14)+'deg)';c.style.opacity=Math.max(.55,1-Math.abs(x)/500)}};c.onpointerup=e=>{if(!drag)return;drag=false;let x=e.clientX-start;if(Math.abs(x)>90)swipe(x>0);else render()}}s.appendChild(c)}if(idx>=jobs.length)s.innerHTML='<div class="section" style="margin-top:120px;text-align:center"><div style="font-size:50px">🎉</div><h2>You’re all caught up!</h2><p class="small">Check back later for new jobs.</p><button class="btn primary" onclick="idx=0;render()">Start over</button></div>'}
 function swipe(like){let c=document.querySelector('.card');if(!c)return;c.style.transition='.35s';c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';c.style.opacity=0;setTimeout(()=>{idx++;render();if(like)document.getElementById('match').classList.add('show')},250)}
 function closeMatch(){document.getElementById('match').classList.remove('show')}
