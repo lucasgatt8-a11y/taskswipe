@@ -137,17 +137,25 @@ async function swipe(like){
 
   let job=jobs[idx];
 
-  if(currentUser && job){
-    const {error}=await sb.from('swipes').insert({
-      user_id:currentUser.id,
-      job_id:job.id,
-      direction:like?'right':'left'
-    });
+  if(!currentUser){
+    toast('Not logged in — please log in again.');
+    return;
+  }
 
-    if(error){
-      toast(error.message);
-      return;
-    }
+  if(!job){
+    toast('No job found.');
+    return;
+  }
+
+  const {error}=await sb.from('swipes').insert({
+    user_id:currentUser.id,
+    job_id:job.id,
+    direction:like?'right':'left'
+  });
+
+  if(error){
+    toast('Swipe error: '+error.message);
+    return;
   }
 
   c.style.transition='.35s';
