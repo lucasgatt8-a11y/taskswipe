@@ -70,7 +70,67 @@ function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remo
   idx=0;
   render();
 }
-function render(){let s=document.getElementById('stack');s.innerHTML='';for(let i=Math.min(idx+2,jobs.length-1);i>=idx;i--){let j=jobs[i],c=document.createElement('div');c.className='card';c.style.transform='scale('+(1-(i-idx)*.035)+') translateY('+(i-idx)*10+'px)';c.innerHTML='<div class="pic">'+j[3]+'</div><div class="body"><span class="pill">NEARBY JOB</span><h2>'+j[0]+'</h2><div class="price">'+j[1]+'</div><div class="meta">'+j[2]+'</div><p class="small">Local customer looking for reliable help. Chat after you match to discuss details.</p></div>';if(i===idx){c.onpointerdown=e=>{drag=true;start=e.clientX;c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(drag){let x=e.clientX-start;c.style.transform='translateX('+x+'px) rotate('+(x/14)+'deg)';c.style.opacity=Math.max(.55,1-Math.abs(x)/500)}};c.onpointerup=e=>{if(!drag)return;drag=false;let x=e.clientX-start;if(Math.abs(x)>90)swipe(x>0);else render()}}s.appendChild(c)}if(idx>=jobs.length)s.innerHTML='<div class="section" style="margin-top:120px;text-align:center"><div style="font-size:50px">🎉</div><h2>You’re all caught up!</h2><p class="small">Check back later for new jobs.</p><button class="btn primary" onclick="idx=0;render()">Start over</button></div>'}
+function render(){
+  let s=document.getElementById('stack');
+  s.innerHTML='';
+
+  for(let i=Math.min(idx+2,jobs.length-1);i>=idx;i--){
+    let j=jobs[i];
+    let c=document.createElement('div');
+
+    c.className='card';
+    c.style.transform='scale('+(1-(i-idx)*.035)+') translateY('+(i-idx)*10+'px)';
+
+    c.innerHTML=
+      '<div class="pic">🏠</div>'+
+      '<div class="body">'+
+      '<span class="pill">NEARBY JOB</span>'+
+      '<h2>'+ (j.title || 'Job') +'</h2>'+
+      '<div class="price">$'+ (j.pay || 0) +'</div>'+
+      '<div class="meta">'+ (j.location || 'Local area') +'</div>'+
+      '<p class="small">'+
+      (j.description || 'Local customer looking for reliable help.')+
+      '</p>'+
+      '</div>';
+
+    if(i===idx){
+      c.onpointerdown=e=>{
+        drag=true;
+        start=e.clientX;
+        c.setPointerCapture(e.pointerId);
+      };
+
+      c.onpointermove=e=>{
+        if(drag){
+          let x=e.clientX-start;
+          c.style.transform='translateX('+x+'px) rotate('+(x/14)+'deg)';
+          c.style.opacity=Math.max(.55,1-Math.abs(x)/500);
+        }
+      };
+
+      c.onpointerup=e=>{
+        if(!drag)return;
+        drag=false;
+        let x=e.clientX-start;
+
+        if(Math.abs(x)>90)swipe(x>0);
+        else render();
+      };
+    }
+
+    s.appendChild(c);
+  }
+
+  if(idx>=jobs.length){
+    s.innerHTML=
+      '<div class="section" style="margin-top:120px;text-align:center">'+
+      '<div style="font-size:50px">🎉</div>'+
+      '<h2>You’re all caught up!</h2>'+
+      '<p class="small">Check back later for new jobs.</p>'+
+      '<button class="btn primary" onclick="idx=0;render()">Start over</button>'+
+      '</div>';
+  }
+}
 function swipe(like){let c=document.querySelector('.card');if(!c)return;c.style.transition='.35s';c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';c.style.opacity=0;setTimeout(()=>{idx++;render();if(like)document.getElementById('match').classList.add('show')},250)}
 function closeMatch(){document.getElementById('match').classList.remove('show')}
 async function postJob(){
