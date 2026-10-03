@@ -131,7 +131,38 @@ function render(){
       '</div>';
   }
 }
-function swipe(like){let c=document.querySelector('.card');if(!c)return;c.style.transition='.35s';c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';c.style.opacity=0;setTimeout(()=>{idx++;render();if(like)document.getElementById('match').classList.add('show')},250)}
+async function swipe(like){
+  let c=document.querySelector('.card');
+  if(!c)return;
+
+  let job=jobs[idx];
+
+  if(currentUser && job){
+    const {error}=await sb.from('swipes').insert({
+      user_id:currentUser.id,
+      job_id:job.id,
+      direction:like?'right':'left'
+    });
+
+    if(error){
+      toast(error.message);
+      return;
+    }
+  }
+
+  c.style.transition='.35s';
+  c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';
+  c.style.opacity=0;
+
+  setTimeout(()=>{
+    idx++;
+    render();
+
+    if(like){
+      document.getElementById('match').classList.add('show');
+    }
+  },250);
+}
 function closeMatch(){document.getElementById('match').classList.remove('show')}
 async function postJob(){
   if(!currentUser){
