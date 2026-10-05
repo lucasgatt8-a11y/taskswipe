@@ -147,15 +147,30 @@ async function swipe(like){
     return;
   }
 
-  const {error}=await sb.from('swipes').insert({
+  // Save the swipe
+  const {error:swipeError}=await sb.from('swipes').insert({
     user_id:currentUser.id,
     job_id:job.id,
     direction:like?'right':'left'
   });
 
-  if(error){
-    toast('Swipe error: '+error.message);
+  if(swipeError){
+    toast('Swipe error: '+swipeError.message);
     return;
+  }
+
+  // A right swipe creates a match for now
+  if(like){
+    const {error:matchError}=await sb.from('matches').insert({
+      job_id:job.id,
+      customer_id:job.customer_id,
+      worker_id:currentUser.id
+    });
+
+    if(matchError){
+      toast('Match error: '+matchError.message);
+      return;
+    }
   }
 
   c.style.transition='.35s';
