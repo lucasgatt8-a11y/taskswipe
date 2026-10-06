@@ -79,7 +79,6 @@ function show(id){if(!currentUser&&!['welcome','auth'].includes(id))id='auth';do
 function choose(r){document.getElementById('greet').textContent=r==='worker'?'Find your next job 👋':'Let’s get that job done 👋';show('home')}
 function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));el.classList.add('active');show(id)}
   async function loadJobs(){
-    async function loadWorkers(){
   const {data,error}=await sb
     .from('profiles')
     .select('*')
