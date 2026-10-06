@@ -90,7 +90,22 @@ function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remo
   idx=0;
   render();
 }
-function render(){
+async function loadWorkers(){
+  const {data,error}=await sb
+    .from('profiles')
+    .select('*')
+    .eq('role','worker');
+
+  if(error){
+    toast(error.message);
+    return;
+  }
+
+  workers=data||[];
+  workerIdx=0;
+  renderWorkers();
+}
+  function render(){
   let s=document.getElementById('stack');
   s.innerHTML='';
 
