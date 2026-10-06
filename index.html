@@ -31,6 +31,23 @@ main{padding:18px 18px 94px}.screen{display:none}.screen.active{display:block}h1
 <section id="roles" class="screen"><h1>What brings you here?</h1><p class="sub">Choose your side. You can switch later.</p><div class="rolegrid"><button class="role" onclick="choose('customer')"><div style="font-size:34px">🏠</div><b>I need a job done</b><span>Post a task and find nearby help.</span></button><button class="role" onclick="choose('worker')"><div style="font-size:34px">🛠️</div><b>I'm looking for jobs</b><span>Swipe through jobs and get matched.</span></button></div></section>
 <section id="home" class="screen"><h1 id="greet">Hey there 👋</h1><p class="sub">Ready to make something happen?</p><div class="hero"><h1 style="font-size:25px">Your next opportunity is one swipe away.</h1><button class="btn" style="background:white;color:#1267d8" onclick="show('swipe')">Start swiping →</button></div><div class="section"><div class="row"><b>Nearby jobs</b><span class="small">2.5 mi</span></div><div class="jobrow"><b>Pressure Wash Driveway</b><div class="small">$125 · Saturday · 2.4 mi</div></div><div class="jobrow"><b>Yard Cleanup</b><div class="small">$90 · Sunday · 3.1 mi</div></div></div></section>
 <section id="swipe" class="screen"><div class="row"><div><h1>Discover</h1><p class="sub">Swipe right to match.</p></div><span class="pill">JOBS</span></div><div id="stack" class="stack"></div><div class="swipes"><button class="swipe no" onclick="swipe(false)">✕</button><button class="swipe" onclick="toast('Saved')">★</button><button class="swipe yes" onclick="swipe(true)">♥</button></div></section>
+  <section id="workers" class="screen">
+  <div class="row">
+    <div>
+      <h1>Find a Worker</h1>
+      <p class="sub">Swipe right if you'd like to work with them.</p>
+    </div>
+    <span class="pill">WORKERS</span>
+  </div>
+
+  <div id="workerStack" class="stack"></div>
+
+  <div class="swipes">
+    <button class="swipe no" onclick="swipeWorker(false)">✕</button>
+    <button class="swipe" onclick="toast('Saved')">★</button>
+    <button class="swipe yes" onclick="swipeWorker(true)">♥</button>
+  </div>
+</section>
 <section id="post" class="screen"><h1>Post a job</h1><p class="sub">Tell local workers what you need.</p><div class="form"><input id="title" class="input" placeholder="Job title"><input id="budget" class="input" placeholder="Budget (e.g. $125)"><input id="when" class="input" placeholder="When do you need it?"><textarea id="desc" class="textarea" placeholder="Describe the job..."></textarea><button class="btn primary" onclick="postJob()">Post job</button></div></section>
 <section id="jobs" class="screen"><h1>My jobs</h1><p class="sub">Keep track of your work.</p><div class="section"><div class="row"><div><b>Pressure Wash Driveway</b><div class="small">Matched · Saturday</div></div><span class="pill">$125</span></div></div><div class="section"><div class="row"><div><b>Yard Cleanup</b><div class="small">Waiting for matches</div></div><span class="pill">Posted</span></div></div></section>
 <section id="messages" class="screen"><h1>Messages</h1><p class="sub">Your matches in one place.</p><div class="section"><div class="row"><div class="row"><div class="avatar">JD</div><div><b>Jordan D.</b><div class="small">Hey! What time works for you?</div></div></div><span>›</span></div></div><div class="section"><div class="row"><div class="row"><div class="avatar">MR</div><div><b>Maria R.</b><div class="small">Thanks for matching!</div></div></div><span>›</span></div></div></section>
