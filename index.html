@@ -75,7 +75,7 @@ async function logout(){if(currentUser){await sb.auth.signOut();currentUser=null
 async function initAuth(){if(SUPABASE_PUBLISHABLE_KEY==='PASTE_YOUR_PUBLISHABLE_KEY_HERE')return;const {data:{session}}=await sb.auth.getSession();if(session){currentUser=session.user;await loadProfile()}}
 sb.auth.onAuthStateChange((_e,s)=>{currentUser=s?.user||null});
 
-function show(id){if(!currentUser&&!['welcome','auth'].includes(id))id='auth';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('nav').style.display=(id==='welcome'||id==='auth'||id==='roles')?'none':'flex';if(id==='swipe')loadJobs()}
+function show(id){if(!currentUser&&!['welcome','auth'].includes(id))id='auth';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.getElementById('nav').style.display=(id==='welcome'||id==='auth'||id==='roles')?'none':'flex';if(id==='swipe')loadJobs();if(id==='workers')loadWorkers();
 function choose(r){document.getElementById('greet').textContent=r==='worker'?'Find your next job 👋':'Let’s get that job done 👋';show('home')}
 function go(id,el){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));el.classList.add('active');show(id)}
   async function loadJobs(){
