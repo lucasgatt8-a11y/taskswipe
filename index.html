@@ -166,6 +166,39 @@ async function loadWorkers(){
       '</div>';
   }
 }
+  function renderWorkers(){
+  let s=document.getElementById('workerStack');
+  s.innerHTML='';
+
+  if(!workers.length){
+    s.innerHTML=
+      '<div class="section" style="margin-top:120px;text-align:center">'+
+      '<div style="font-size:50px">👷</div>'+
+      '<h2>No workers yet</h2>'+
+      '<p class="small">Check back when workers join LocalLeads.</p>'+
+      '</div>';
+    return;
+  }
+
+  for(let i=Math.min(workerIdx+2,workers.length-1);i>=workerIdx;i--){
+    let w=workers[i];
+    let c=document.createElement('div');
+
+    c.className='card';
+    c.style.transform='scale('+(1-(i-workerIdx)*.035)+') translateY('+(i-workerIdx)*10+'px)';
+
+    c.innerHTML=
+      '<div class="pic">👷</div>'+
+      '<div class="body">'+
+      '<span class="pill">LOCAL WORKER</span>'+
+      '<h2>'+ (w.full_name || 'Local Worker') +'</h2>'+
+      '<div class="meta">'+ (w.location || 'Local area') +'</div>'+
+      '<p class="small">Local worker ready to help with nearby jobs.</p>'+
+      '</div>';
+
+    s.appendChild(c);
+  }
+}
 async function swipe(like){
   let c=document.querySelector('.card');
   if(!c)return;
