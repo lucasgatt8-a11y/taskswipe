@@ -99,7 +99,7 @@ async function loadWorkers(){
   if(error){
     toast(error.message);
     return;
-  }
+ 
 
   workers=data||[];
   workerIdx=0;
@@ -195,7 +195,30 @@ async function loadWorkers(){
       '<div class="meta">'+ (w.location || 'Local area') +'</div>'+
       '<p class="small">Local worker ready to help with nearby jobs.</p>'+
       '</div>';
+if(i===workerIdx){
+  c.onpointerdown=e=>{
+    drag=true;
+    start=e.clientX;
+    c.setPointerCapture(e.pointerId);
+  };
 
+  c.onpointermove=e=>{
+    if(drag){
+      let x=e.clientX-start;
+      c.style.transform='translateX('+x+'px) rotate('+(x/14)+'deg)';
+      c.style.opacity=Math.max(.55,1-Math.abs(x)/500);
+    }
+  };
+
+  c.onpointerup=e=>{
+    if(!drag)return;
+    drag=false;
+    let x=e.clientX-start;
+
+    if(Math.abs(x)>90)swipeWorker(x>0);
+    else renderWorkers();
+  };
+}
     s.appendChild(c);
   }
 }
