@@ -222,6 +222,20 @@ if(i===workerIdx){
     s.appendChild(c);
   }
 }
+  async function swipeWorker(like){
+  let c=document.querySelector('#workerStack .card');
+  if(!c)return;
+
+  c.style.transition='.35s';
+  c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';
+  c.style.opacity=0;
+
+  setTimeout(()=>{
+    workerIdx++;
+    renderWorkers();
+  },250);
+}
+
 async function swipe(like){
   let c=document.querySelector('.card');
   if(!c)return;
