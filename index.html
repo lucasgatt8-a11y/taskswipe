@@ -264,8 +264,23 @@ async function swipe(like){
     return;
   }
 
-  // A right swipe creates a match for now
-  if(like){
+  // Check for a mutual like
+if(like){
+  const {data:customerSwipe,error:customerSwipeError}=await sb
+    .from('swipes')
+    .select('id')
+    .eq('user_id',job.customer_id)
+    .eq('job_id',job.id)
+    .eq('worker_id',currentUser.id)
+    .eq('direction','right')
+    .maybeSingle();
+
+  if(customerSwipeError){
+    toast('Match check error: '+customerSwipeError.message);
+    return;
+  }
+
+  if(customerSwipe){
     const {error:matchError}=await sb.from('matches').insert({
       job_id:job.id,
       customer_id:job.customer_id,
@@ -276,8 +291,10 @@ async function swipe(like){
       toast('Match error: '+matchError.message);
       return;
     }
-  }
 
+    toast('It’s a match!');
+  }
+}
   c.style.transition='.35s';
   c.style.transform='translateX('+(like?520:-520)+'px) rotate('+(like?25:-25)+'deg)';
   c.style.opacity=0;
